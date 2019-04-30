@@ -8,6 +8,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import repository.MockRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.BDDMockito.given;
@@ -37,19 +40,54 @@ public class MockServiceTest {
     }
 
     // 1. when, thenReturn을 사용하여 어떠한 챔피언 이름을 입력해도 베인을 리턴하도록 테스트하세요
+    @Test
+    public void whenBringChampionName_haveToReturnBein(){
+        Champion champion = mock(Champion.class);
 
+        when(champion.getName()).thenReturn("베인");
+        assertThat(champion.getName(),is("베인"));
+    }
 
     // 2. 챔피언 이름으로 야스오를 저장하면, doThrow를 사용하여 Exception이 발생하도록 테스트 하세요.
+    @Test(expected = IllegalArgumentException.class)
+    public void 챔피언이름으로_야스오를저장하면_Exception(){
+        Champion champion = mock(Champion.class);
 
+        doThrow(new IllegalArgumentException()).when(champion).setName(eq("야스오"));
+        champion.setName("야스오");
+    }
 
     // 3. verify 를 사용하여 '미드' 포지션을 저장하는 프로세스가 진행되었는지 테스트 하세요.
-
+    @Test
+    public void testSavingProcessMidPosition(){
+        Champion champion = mock(Champion.class);
+        champion.setPosition("미드");
+        verify(champion).setPosition("미드");
+    }
 
     // 4. champion 객체의 크기를 검증하는 로직이 1번 실행되었는지 테스트 하세요.
+    @Test
+    public void verifySizeOfTheObject_ExecuteOnce(){
+        List<Champion> champions = mock(ArrayList.class);
 
+        Champion champion = mock(Champion.class);
+        champion.setName("루시안");
+        champion.setPosition("바텀");
+        champion.setHasSkinCount(3);
+
+        champions.add(champion);
+
+        int championSize = champions.size();
+        verify(champions,times(1)).size();
+    }
 
     // 4-1. champion 객체에서 이름을 가져오는 로직이 2번 이상 실행되면 Pass 하는 로직을 작성하세요.
-
+//    @Test
+//    public void bringNameTwiceCanPass(){
+//        List<Champion> champions = mock(ArrayList.class);
+//
+//        Champion champion = mock(Champion.class);
+//    }
     // 4-2. champion 객체에서 이름을 가져오는 로직이 최소 3번 이하 실행되면 Pass 하는 로직을 작성하세요.
 
     // 4-3. champion 객체에서 이름을 저장하는 로직이 실행되지 않았으면 Pass 하는 로직을 작성하세요.
@@ -70,6 +108,12 @@ public class MockServiceTest {
     }
 
     // 1. 리산드라라는 챔피언 이름으로 검색하면 미드라는 포지션과 함께 가짜 객체를 리턴받고, 포지션이 탑이 맞는지를 테스트하세요
+    @Test
+    public void whenSearchLissandra_returnMidPosition_testPositionIsTop() {
+        when(mockService.findByName("리산드라")).thenReturn(new Champion("리산드라", "미드", 5));
+        Champion champion = mockService.findByName("리산드라");
+        assertThat(champion.getPosition(), is("미드"));
+    }
 
     // 2. 2개 이상의 챔피언을 List로 만들어 전체 챔피언을 가져오는 메소드 호출시 그 갯수가 맞는지 확인하는 테스트 코드를 작성하세요.
 

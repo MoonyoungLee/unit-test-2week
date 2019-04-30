@@ -5,6 +5,8 @@ import repository.MockRepository;
 
 import java.util.List;
 
+
+// 비지니스 로직을 테스트함
 public class MockService {
     private final MockRepository mockRepository;
 
@@ -12,7 +14,8 @@ public class MockService {
         this.mockRepository = mockRepository;
     }
 
-    public List<Champion> findAllChampions() {
+    public List<Champion> findAllChampions()
+    {
         return mockRepository.findAll();
     }
 
